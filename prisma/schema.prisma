@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Unidad {
+  BOTELLA
+  LATA
+  KILO
+  UNIDAD
+  VASO
+}
+
+enum TipoPerdida {
+  VENCIDO
+  ROTO
+  DERRAMADO
+  REGALADO
+  OTRO
+}
+
+enum EstadoVenta {
+  ACTIVA
+  ANULADA
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  recoveryHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Producto {
+  id           String   @id @default(cuid())
+  nombre       String
+  categoria    String
+  precioVenta  Float
+  costoCompra  Float
+  proveedor    String
+  unidad       Unidad
+  cantidad     Float    @default(0)
+  stockMinimo  Float    @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ventaItems       VentaItem[]
+  compraItems      CompraItem[]
+  perdidas         Perdida[]
+  ajustesInventario AjusteInventario[]
+}
+
+model Venta {
+  id               String      @id @default(cuid())
+  fecha            DateTime    @default(now())
+  notas            String?
+  estado           EstadoVenta @default(ACTIVA)
+  fechaAnulacion   DateTime?
+  motivoAnulacion  String?
+  createdAt        DateTime    @default(now())
+  items            VentaItem[]
+}
+
+model VentaItem {
+  id             String @id @default(cuid())
+  ventaId        String
+  productoId     String
+  cantidad       Float
+  precioUnitario Float
+  costoUnitario  Float
+
+  venta    Venta    @relation(fields: [ventaId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id])
+}
+
+model Compra {
+  id        String       @id @default(cuid())
+  fecha     DateTime     @default(now())
+  proveedor String?
+  notas     String?
+  createdAt DateTime     @default(now())
+  items     CompraItem[]
+}
+
+model CompraItem {
+  id            String @id @default(cuid())
+  compraId      String
+  productoId    String
+  cantidad      Float
+  costoUnitario Float
+
+  compra   Compra   @relation(fields: [compraId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id])
+}
+
+model Gasto {
+  id        String   @id @default(cuid())
+  fecha     DateTime @default(now())
+  concepto  String
+  monto     Float
+  categoria String?
+  createdAt DateTime @default(now())
+}
+
+model Perdida {
+  id            String      @id @default(cuid())
+  fecha         DateTime    @default(now())
+  productoId    String
+  cantidad      Float
+  costoUnitario Float
+  tipo          TipoPerdida
+  notas         String?
+  createdAt     DateTime    @default(now())
+
+  producto Producto @relation(fields: [productoId], references: [id])
+}
+
+model AjusteInventario {
+  id               String   @id @default(cuid())
+  productoId       String
+  cantidadAnterior Float
+  cantidadNueva    Float
+  diferencia       Float
+  motivo           String?
+  usuario          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  producto Producto @relation(fields: [productoId], references: [id])
+}

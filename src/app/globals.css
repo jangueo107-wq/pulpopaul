@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-dark: #1a0a2e;
+  --color-brand-accent: #e91e8c;
+  --color-brand-purple: #6b21a8;
+  --color-brand-light: #fdf4ff;
+  --color-surface: #f8fafc;
+  --color-success: #059669;
+  --color-danger: #dc2626;
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  background: var(--color-surface);
+  color: #0f172a;
+  font-size: 16px;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+.card {
+  @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-base font-medium transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.btn-primary {
+  @apply bg-brand-accent text-white shadow-sm hover:brightness-110;
+}
+
+.btn-secondary {
+  @apply border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white hover:bg-red-700;
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20;
+}
+
+.label {
+  @apply mb-1.5 block text-sm font-semibold text-slate-700;
+}
+
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+}
+
+.badge-warning {
+  @apply bg-amber-100 text-amber-800;
+}
+
+.badge-danger {
+  @apply bg-red-100 text-red-800;
+}
+
+.badge-ok {
+  @apply bg-emerald-100 text-emerald-800;
+}
+
+.page-title {
+  @apply text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl;
+}
+
+.page-subtitle {
+  @apply mt-1 text-base text-slate-500;
+}
+
+.stat-value {
+  @apply text-2xl font-bold tracking-tight sm:text-3xl;
+}
+
+.brand-header {
+  @apply border-b border-purple-900/20 bg-brand-dark;
+}
+
+.nav-active {
+  @apply bg-brand-accent/15 text-brand-accent;
+}
